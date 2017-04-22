@@ -1,5 +1,6 @@
 var models = require('../models');
 var app = require('../app.js');
+var Promise = require('bluebird');
 
 var defaultCorsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -18,7 +19,17 @@ module.exports = {
 
 
     }, // a function which handles a get request for all messages
-    post: function (req, res) {} // a function which handles posting a message to the database
+    post: function (req, res) {
+      console.log('hey from message post controller');
+      const messages = models.messages.post(null, req.query.json);
+
+      messages.then((res) => {
+        console.log('Message successfully posted to database...');
+      })
+      .catch((err) => {
+        throw err;
+      })
+    } // a function which handles posting a message to the database
   },
 
   users: {
@@ -27,15 +38,17 @@ module.exports = {
 
     },
     post: function (req, res) {
-      app.post('/classes/users', function(req) {
-        models.users.post(req.message);
+      console.log('Hey from user post controller');
+      console.log(req);
+      const messages = models.users.post(null, req.query.json);
+
+      messages.then((res) => {
+        console.log('User successfully posted to database...');
+      })
+      .catch((err) => {
+        throw err;
       })
     }
-    // post: function (user) {
-    //   app.post('/classes/users', function(req, res) {
-    //     models.users.post(req, res);
-    //   })
-    // }
   }
 };
 
